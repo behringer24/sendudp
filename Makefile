@@ -10,7 +10,7 @@ CC	= gcc
 ## other Unices use:
 FLAGS	= -Wall -O2 -DCFGFILE=\"$(CFGFILE)\"
 
-all:	udplogd sendudp
+all:	yasul sendudp
 
 install:    yasul sendudp
 	install -m 755 yasul $(PREFIX)/sbin/yasul && \
@@ -25,7 +25,7 @@ server:	yasul
 
 client:	sendudp
 
-udplogd:	yasul.c
+yasul:	yasul.c
 	$(CC) $(FLAGS) -o yasul yasul.c
 
 sendudp:	sendudp.c
