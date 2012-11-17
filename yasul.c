@@ -406,8 +406,7 @@ static void sig_term(int signo)
 
 void usage()
 {
-	(void)fprintf(stderr, "usage: yasul [<options>]
-			where options are: [defaults in brackets]\n-a <addr>  bind to specific address [any]\n-c <file>  use specified configuration file [%s]\n-d         debugging mode (do not fork, write to stdout only)\n-h         this text\n-p <port>  specify port\n-v         print version information\n", configfile);
+	(void)fprintf(stderr, "usage: yasul [<options>]\nwhere options are: [defaults in brackets]\n-a <addr>  bind to specific address [any]\n-c <file>  use specified configuration file [%s]\n-d         debugging mode (do not fork, write to stdout only)\n-h         this text\n-p <port>  specify port\n-v         print version information\n", configfile);
 	exit(EXIT_FAILURE);
 }
 
