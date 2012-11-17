@@ -3,7 +3,7 @@
 #
 
 PREFIX	= /usr/local
-CFGFILE	= $(PREFIX)/sbin/udplogd.conf
+CFGFILE	= $(PREFIX)/sbin/yasul.conf
 CC	= gcc
 ## Solaris users use:
 # FLAGS	= -Wall -O2 -DCFGFILE=\"$(CFGFILE)\" -DSOLARIS
@@ -12,21 +12,21 @@ FLAGS	= -Wall -O2 -DCFGFILE=\"$(CFGFILE)\"
 
 all:	udplogd sendudp
 
-install:	udplogd sendudp
-	install -m 755 udplogd $(PREFIX)/sbin/udplogd && \
+install:    yasul sendudp
+	install -m 755 yasul $(PREFIX)/sbin/yasul && \
 	install -m 755 sendudp $(PREFIX)/bin/sendudp && \
-	install -m 644 udplogd.8 $(PREFIX)/man/man8/udplogd.8 && \
-	install -m 644 udplogd.conf.5 $(PREFIX)/man/man5/udplogd.conf.5 && \
-	install -m 644 sendudp.1 $(PREFIX)/man/man1/sendudp.1 && \
-	install -m 644 sample-udplogd.conf $(CFGFILE) && \
+	install -m 644 yasul.8 $(PREFIX)/man/man8/yasul.8 && \
+	install -m 644 yasul.conf.5 $(PREFIX)/man/man5/yasul.conf.5 && \
+	install -m 644 sendudp.1 $(PREFIX)/man/man1/yasul.1 && \
+	install -m 644 sample-yasul.conf $(CFGFILE) && \
 	echo Installation complete
 
-server:	udplogd
+server:	yasul
 
 client:	sendudp
 
-udplogd:	udplogd.c
-	$(CC) $(FLAGS) -o udplogd udplogd.c
+udplogd:	yasul.c
+	$(CC) $(FLAGS) -o yasul yasul.c
 
 sendudp:	sendudp.c
 	$(CC) $(FLAGS) -o sendudp sendudp.c

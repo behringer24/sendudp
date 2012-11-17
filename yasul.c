@@ -1,10 +1,14 @@
 /*
- *	udplogd - receive and log UDP datagrams
- *	(c)1996,2000 Pitt Murmann
- *	Copyright: GPL
+ * yasul - yet another simple udp logger
+ * https://github.com/behringer24/yasul
+ * 	
+ * Fork of:
+ * udplogd - receive and log UDP datagrams
+ * (c)1996,2000 Pitt Murmann
+ * Copyright: GPL
  */
 
-#define VERSION	"udplogd version 0.1.4\n"
+#define VERSION	"yasul version 0.1.0 (udplogd fork)\n"
 
 #include <arpa/inet.h>
 #ifdef SOLARIS
@@ -38,7 +42,7 @@
 
 #define FILEMODE	(S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
 #ifndef CFGFILE
-#define CFGFILE	"/sbin/udplogd.conf"
+#define CFGFILE	"/sbin/yasul.conf"
 #endif
 
 int debug = 0;
@@ -402,7 +406,7 @@ static void sig_term(int signo)
 
 void usage()
 {
-	(void)fprintf(stderr, "usage: udplogd [<options>]\nwhere options are: [defaults in brackets]\n-a <addr>  bind to specific address [any]\n-c <file>  use specified configuration file [%s]\n-d         debugging mode (do not fork, write to stdout only)\n-h         this text\n-p <port>  specify port\n-v         print version information\n", configfile);
+	(void)fprintf(stderr, "usage: yasul [<options>]\nwhere options are: [defaults in brackets]\n-a <addr>  bind to specific address [any]\n-c <file>  use specified configuration file [%s]\n-d         debugging mode (do not fork, write to stdout only)\n-h         this text\n-p <port>  specify port\n-v         print version information\n", configfile);
 	exit(EXIT_FAILURE);
 }
 
@@ -539,7 +543,7 @@ int main(int argc, char **argv)
 	 *	Prepare messaging and interrupt handlers.
 	 */
 	if(debug)
-		(void)fprintf(stderr, "udplogd started in debug mode\nWaiting for input on %s:%d\n", address, port);
+		(void)fprintf(stderr, "yasul started in debug mode\nWaiting for input on %s:%d\n", address, port);
 	else {
 		if(signal(SIGHUP, sig_hup) == SIG_ERR)
 			error_signal();
@@ -547,7 +551,7 @@ int main(int argc, char **argv)
 			error_signal();
 		if(signal(SIGTERM, sig_term) == SIG_ERR)
 			error_signal();
-		openlog("udplogd", 0, LOG_DAEMON|LOG_PID);
+		openlog("yasul", 0, LOG_DAEMON|LOG_PID);
 		syslog(LOG_INFO, "address %s, port %d", address, port);
 		/* say good-bye to parent */
 		*mp = (char)EXIT_SUCCESS;
