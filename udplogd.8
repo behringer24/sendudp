@@ -1,0 +1,118 @@
+.TH UDPLOGD 8 "July 2001" UDPLOGD UDPLOGD
+.SH NAME
+udplogd \- log incoming UDP datagrams
+.SH SYNOPSIS
+.LP
+.B udplogd
+.RB [ -dhv\c
+]
+.RB [ -a
+.IR address ]
+.RB [ -c
+.IR config_file ]
+.RB [ -p
+.IR port ]
+.SH DESCRIPTION 
+.LP
+.B udplogd
+is a logging daemon for UDP-datagrams.
+.B udplogd
+expects data to consist of some sort of readable text and
+concatenates each datagram to a log file after appending
+a newline character to it. It also optionally prepends
+a time stamp and the source address of the datagram,
+that is, the IP-address of the client having sent the
+datagram. Thus,
+.B udplogd
+acts similar to syslogd(8) receiving remote messages.
+.LP
+However, unlike syslogd and friends,
+.B udplogd
+has been optimized for efficiency and throughput. This is
+achieved by not looking up remote host names, but simply
+dealing with IP-addresses, as well as by downgrading the
+complexity and feature richness.
+.B udplogd
+is unable to deal with priorities or facilities, but simply
+packs any incoming data to the specified log file.
+.SH OPTIONS
+.TP
+.BI \-a "\ address
+Per default,
+.B udplogd
+listens for incoming data at any available interface.
+Especially when using a multi-homed environment this
+is probably not exactly what you want. Thence, the
+.I address
+of the local interface may be specified explicitely.
+.TP
+.BI \-c "\ config_file
+A host may easily run two or more instances of
+.BR udplogd.
+Apart from that, if binding the interface to a
+non-priviledged port (see below), any user may
+make use of
+.BR udplogd .
+Thus, a configuration file different than the default
+file (usually /etc/udplogd.conf) may be specified
+for every instance of
+.BR udplogd .
+.LP
+There is a separate man-page for the configuration file
+(see
+.BR udplogd (5)).
+Most options, which fine-tune the daemon's behavior,
+are provided in this file.
+.TP
+.B \-d
+Enable debugging, which means that nothing is logged,
+nor written to files, but echoed on stdout only. Note,
+that the configuration file is not read, if debugging
+is enabled.
+.TP
+.B \-h
+Display a short usage text.
+.TP
+.BI \-p "\ port
+Bind the local address (see above) to a specific
+.IR port .
+Note, that the
+.I port
+has to be specified somewhere - either on the command
+line or in the configuration file, because there is no
+default port for
+.BR udplogd.
+.TP
+.B \-v
+Display version information.
+.SH SIGNALS
+.LP
+If
+.B udplogd
+catches a
+.BR SIGHUP ,
+it closes the current log file and reopens it.
+If a
+.B FileIndex
+is specified in the configuration file, the current
+time stamp is used for the new file suffix.
+.LP
+If
+.B udplogd
+catches a
+.B SIGINT
+or
+.BR SIGTERM ,
+it gracefully terminates, closing all open files.
+.SH SEE ALSO
+.LP
+.BR udplogd.conf (5),
+.BR sendudp (1),
+.BR date (1),
+.BR strftime (3),
+.BR netstat (8),
+.BR ifconfig (8),
+.BR syslogd (8).
+.SH AUTHOR
+.LP
+Pitt Murmann <pm@ekkaia.org>

@@ -1,0 +1,12 @@
+Modify the PREFIX-variable in the Makefile accordingly
+and type
+
+	make
+
+to build the binaries. You may silently ignore any
+warnings concerning date formats. Type
+
+	make install
+
+to install the files into the appropriate directories.
+You most probably need root priviledges to do this.

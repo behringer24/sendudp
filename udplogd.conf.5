@@ -1,0 +1,211 @@
+.TH UDPLOGD.CONF 5 "December 2001" UDPLOGD.CONF UDPLOGD.CONF
+.SH NAME
+udplogd.conf \- udplogd configuration file
+.SH OVERVIEW
+.B udplogd
+is a is a logging daemon for UDP-datagrams being received.
+Per default, it uses the configuration file
+.BR /etc/udplogd.conf
+from which it derives most of its options.
+Some of the options may also be specified on the command
+line. If this is the case, they take precedence over their
+siblings in the configuration file.
+.SH SYNTAX
+.B udplogd.conf
+consists of several independent lines, each of which is
+terminated by a linefeed character. Empty lines and lines
+beginning with a pound symbol (#) are ignored.
+Settings consist of a command and an argument, which are
+separated by one or more white space characters. Commands
+may be preceeded by any number of white spaces.
+.LP
+Commands
+may be written upper and lower-cased as well as both mixed
+up. Arguments, too, may consist of upper and lower case
+letters as long as they are referring to special configuration
+options. For instance, boolean types may be spelled
+.BR TRUE ,
+.BR false ,
+.BR True ,
+.BR FaLSe ...
+Arguments, which are referring
+to external resources, such as file names, have to be
+specified literally, of course. If the argument should
+contain white spaces itself, it has to wrapped into
+inverted commas.
+.SH COMMANDS
+.TP
+.BI LocalAddress "\ address
+Address of the interface
+.B udplogd
+is listening at. It may either be specified by an IP-address
+or a resolvable host name alias. Since
+.B LocalAddress
+defaults to 0.0.0.0, that is, it listens to
+.B any
+interface, specifying it is especially imported when dealing
+with multi-homed hosts.
+.TP
+.BI LocalPort "\ port
+Port which accepts incoming data on the specified interface
+(see
+.BR LocalAddress ).
+.I port
+may either be given as a numeric value or the name of a
+service port (see
+.BR /etc/services ).
+.TP
+.BI FileName "\ filename
+Base name of the file the incoming data is to be logged to.
+This name may be succeeded by an additional suffix, if
+.B FileIndex
+is specified as well.
+.TP
+.BI FileMode "\ mode
+The file mode of newly created files.
+.I mode
+must be given as an numeric octal value, which may or
+may not be preceeded by a leading zero.
+.TP
+.BI FileFlag "\ flag
+The open(1)-system-call being used to open
+.B FileName
+and its friends may be specified by the following flags:
+.RS
+.TP 1.0in
+.B append
+The file is opened in append mode. Before each
+write, the file pointer is positioned at the end of
+the file, as if with lseek.
+.B append
+may lead to
+corrupted files on NFS file systems if more than
+one process appends data to a file at once. This
+is because NFS does not support appending to a
+file, so the client kernel has to simulate it,
+which can't be done without a race condition.
+.B append
+is especially interesting, if other programs, such
+as other instances of
+.BR udplogd ,
+also log to the same file.
+.TP
+.B truncate
+If the file already exists it will be truncated.
+.TP
+.B exclusive
+If the file already exists
+it is an error and the open will fail.
+.B exclusive
+is
+broken on NFS file systems, programs which rely on
+it for performing locking tasks will contain a race
+condition.
+.RE
+.TP
+.BI FileIndex "\ stamp
+If more than one file is written (see
+.BR SizeLimit ),
+the files are separated from each other by
+appending suffices in form of a time stamp
+to every
+.BR FileName.
+.I stamp
+may chosen from the same set of values as
+the argument given to
+.B TimeStamp
+(see below). However, all spaces are replaced
+by underscores and all colons are replaced
+by dashes, since both do not fit nicely into
+file systems.
+.TP
+.BI SizeLimit "\ limit
+Per default,
+.B udplogd
+writes incoming data continiously to the same
+file, until the file system is full or can not be
+handled by the file system due to its large size.
+.BR SizeLimit ,
+on the other hand,
+limits log files to roughly
+.I limit
+bytes each. The numerical value of
+.I limit
+may be succeeded by a 'K' or 'M', in which case
+the value is multiplied by 1024 or 1048576,
+respectively.
+.B SizeLimit
+needs
+.B FileIndex
+also to be specified.
+.TP
+.BI TimeStamp "\ stamp
+The time stamp each incoming datagram is preceeded with.
+.I stamp
+be one of the following specifiers:
+.RS
+.TP 1.0in
+.B none
+No time stamp is prepended.
+.TP
+.B unix
+The stamp is printed as an integer value of seconds since
+the last epoch. This is default behaviour.
+.TP
+.B time
+The time stamp is printed in 24-hour-time-format.
+.TP
+.B day
+Additionally to the time, the current day (1 - 31) is
+also printed in two-digit-notation.
+.TP
+.B month
+Additionally to the day, the current month (1 - 12) is
+also printed in two-digit-notation.
+.TP
+.B year
+Additionally to the month, the current year is
+also printed in two-digit-notation.
+.TP
+.B full
+Same as
+.BR year ,
+but the year is printed in four-digit-notation.
+.sp
+.RE
+The
+.B full
+format is "%Y-%m-%d %H:%M:%S", that is, ISO-notation.
+All other specifiers simply skip the first
+characters of the data string, respectively.
+.TP
+.BI LineFeed state
+.B state
+may be either
+.B true
+or
+.B false
+indicating whether
+.B udplogd
+appends a linefeed character to each line being
+received.
+.B true
+is the default value.
+.SH FILES
+.TP
+/etc/udplogd.conf
+The
+.B udplogd
+configuration file.
+.TP
+/etc/services
+The service-to-port translation file.
+.SH SEE ALSO
+.BR udplogd (8),
+.BR sendudp (1),
+.BR open (2),
+.BR strftime (3),
+.BR syslogd (8),
+.BR ifconfig (8).
+.SH AUTHOR
+Pitt Murmann <pm@ekkaia.org>

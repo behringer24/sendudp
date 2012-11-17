@@ -1,0 +1,68 @@
+.TH SENDUDP 1 "March 1999" SENDUDP SENDUDP
+.SH NAME
+sendudp \- send UDP datagrams
+.SH SYNOPSIS
+.LP
+.B sendudp
+.RB [ -i
+.IR string ]
+.RB [ -n\c
+]
+.IB address :\c
+.I port
+.RI [ file*\c
+]
+.SH DESCRIPTION 
+.LP
+.B sendudp
+sends input lines read either from the specified input files
+or from stdin via UDP datagrams to a remote host, the latter
+of which is specified by its
+.I address
+and
+.IR port .
+Doing this,
+.B sendudp
+breaks up the input stream into distintive lines (if they
+are less than 65536 characters long each) and packs each
+line into a separate datagram. However, note that the
+intermediate network may split up large datagrams into
+several IP-packets, if their size exceeds the MTU.
+.LP
+Before sending each line of data its newline character
+is stripped. Thus, empty lines, that is,
+lines that contain only a single newline character, are
+not sent at all, because they yield empty sets of data.
+.LP
+.I address
+may either be specified by its IP-address or its (hopefully resolvable)
+hostname.
+.I port
+may either be specified by its numerical value or its representation
+derived from
+.BR /etc/services .
+.SH OPTIONS
+.TP
+.BI \-i "\ string
+Prepend each line being sent out with string
+.IR string .
+.I string
+can be virtually anything, from the current date to the
+hostname of the sending client.
+.TP
+.B -n
+Do not strip the newline character from the end of each line.
+.SH EXAMPLE
+.LP
+.Sp
+.nf
+sendudp -i `hostname` log.domain.com:12345 <namedpipe
+.br
+.fi
+.Sp
+.SH SEE ALSO
+.LP
+.BR udplogd (8).
+.SH AUTHOR
+.LP
+Pitt Murmann <pm@ekkaia.org>
