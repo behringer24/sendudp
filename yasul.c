@@ -410,6 +410,12 @@ void usage()
 	exit(EXIT_FAILURE);
 }
 
+/**
+ * 
+ * @param argc
+ * @param argv
+ * @return 
+ */
 int main(int argc, char **argv)
 {
 	int opt;
